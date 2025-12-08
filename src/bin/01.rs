@@ -10,7 +10,7 @@ fn parse_line(line: &str) -> Option<(char, &str)> {
 pub fn part_one(input: &str) -> Option<u64> {
 
     let mut dial: i32 = 50;
-    let mut counter: u64= 0;
+    let mut counter: u64 = 0;
 
     for line in input.lines() {
         if let Some((direction, number)) = parse_line(line) {
@@ -35,7 +35,32 @@ pub fn part_one(input: &str) -> Option<u64> {
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    None
+
+    let mut big_dial = 1_000_050;
+    let mut counter: u64 = 0;
+
+    for line in input.lines() {
+        if let Some((direction, number)) = parse_line(line) {
+            if let Ok(value) = number.parse::<u32>() {
+
+                match direction {
+                    'L' => {
+                        let new_dial = big_dial - value;
+                        counter += ((big_dial - 1) / 100 - (new_dial - 1) / 100) as u64;
+                        big_dial = new_dial;
+                    },
+                    'R' => {
+                        let new_dial = big_dial + value;
+                        counter += (new_dial / 100 - big_dial / 100) as u64;
+                        big_dial = new_dial;
+                    },
+                    _ => {}
+                }
+            }
+        }
+    }
+
+    Some(counter)
 }
 
 #[cfg(test)]
